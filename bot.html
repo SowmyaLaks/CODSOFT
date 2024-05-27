@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Based Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://www.ismartrecruit.com/upload/blog/main_image/recruitment_chatbot_definition_features_and_benefits.webp');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chat-container {
+            width: 500px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+        #messages {
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #e1ffc7;
+            text-align: right;
+        }
+        .bot-message {
+            background-color: #f1f1f1;
+        }
+        #user-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #send-button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type a message..." />
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        const userInputElement = document.getElementById('user-input');
+        const messagesContainer = document.getElementById('messages');
+        const sendButton = document.getElementById('send-button');
+
+        const conversationContext = {};
+
+        const greetings = ["hello", "hi", "hey", "good morning", "good evening"];
+        const responsesGreetings = ["Hello! How can I help you today?", "Hi there! What can I do for you?", "Hey! How can I assist you?"];
+
+        function chatbotResponse(userInput) {
+            userInput = userInput.toLowerCase();
+
+            if (greetings.some(greeting => userInput.includes(greeting))) {
+                return randomChoice(responsesGreetings);
+            } else if (userInput.includes('how are you')) {
+                return "I’m simply a bot here to help you";
+            } else if (userInput.includes('help') || userInput.includes('assist')) {
+                return "Sure! I'm here to help you, so what do you require help with?";
+            } else if (userInput.includes('bye') || userInput.includes('goodbye')) {
+                return "Goodbye! Have a great day!";
+            } else if (userInput.includes('thank you') || userInput.includes('thanks')) {
+                return "You're welcome! Happy to help.";
+            } else if (/\b(what|who|when|where|why|how)\b/.test(userInput)) {
+                return "That's an interesting question. Can you please provide more details?";
+            } else {
+                return "I'm sorry, I don't understand that. Can you please rephrase?";
+            }
+        }
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function appendMessage(content, className) {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = content;
+            messageElement.className = `message ${className}`;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        sendButton.addEventListener('click', () => {
+            const userInput = userInputElement.value.trim();
+            if (userInput) {
+                appendMessage(userInput, 'user-message');
+                const response = chatbotResponse(userInput);
+                appendMessage(response, 'bot-message');
+                userInputElement.value = '';
+            }
+        });
+
+        userInputElement.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        // Initial greeting message
+        appendMessage("Hello there, I am a straightforward chat bot, just type in “bye” when you want to end the conversation.", 'bot-message');
+    </script>
+</body>
+</html>
